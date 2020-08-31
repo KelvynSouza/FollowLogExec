@@ -42,24 +42,19 @@ namespace TailLogResult.Application
 
         public void Monitor()
         {
-            try
-            {
-                double timer = 0;
-                int timeout = _logStreamParameters.GetSecondsTimeout();                
-                while (timer < timeout)
-                {
-                    if (ValidateExpectedLine(TailLogLine())) break;
 
-                    Thread.Sleep(100);
-                    timer = timer + 0.1;
-                }
-
-                if (timer >= timeout) throw new TailTimeoutException();
-            }
-            catch(TailTimeoutException ex)
+            double timer = 0;
+            int timeout = _logStreamParameters.GetSecondsTimeout();
+            while (timer < timeout)
             {
-                Console.WriteLine(ex.Message);
+                if (ValidateExpectedLine(TailLogLine())) break;
+
+                Thread.Sleep(100);
+                timer = timer + 0.1;
             }
+
+            if (timer >= timeout) throw new TailTimeoutException();
+
 
         }
     }

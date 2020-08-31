@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using TailLogResult.Application;
 using TailLogResult.Configuration;
+using TailLogResult.Exceptions;
 
 namespace TailLogResult
 {
@@ -9,31 +10,38 @@ namespace TailLogResult
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Tail Log!");
+            try
+            {
+                Console.WriteLine("Tail Log!");
 
-            var config = ConfigurationFactory.GetParameters();
+                var config = ConfigurationFactory.GetParameters();
 
-            LogStream logStream = new LogStream(
-                new LogStreamParam()
-                {
-                    FilePath = config.FilePath,
-                    Timeout = config.Timeout,
-                    ExpectedLogLine = config.ExpectedLogLine,
-                    FileLenght = config.FileLenght
-                }
-                );
+                LogStream logStream = new LogStream(
+                    new LogStreamParam()
+                    {
+                        FilePath = config.FilePath,
+                        Timeout = config.Timeout,
+                        ExpectedLogLine = config.ExpectedLogLine,
+                        FileLenght = config.FileLenght
+                    }
+                    );
 
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
 
-            logStream.Monitor();
+                logStream.Monitor();
 
-            stopwatch.Stop();
-            TimeSpan ts = stopwatch.Elapsed;
+                CommandExecuter.Execute(config.CommandToExecute);
 
-            Console.WriteLine($"Elapsed Time: {ts.Hours} Hours {ts.Minutes} Minutes and {ts.Seconds} Seconds");
-            Console.WriteLine("Encerrado");
-
+                Console.WriteLine("Encerrado");
+                
+            }
+            catch (TailTimeoutException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
             Console.ReadLine();
         }
     }
