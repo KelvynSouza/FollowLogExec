@@ -29,16 +29,17 @@ namespace TailLogResult
 
                 logStream.Monitor();
 
-                CommandExecuter.Execute(config.CommandToExecute);
+                if (config.ExecuteCommand)
+                    CommandExecuter.Execute(config.CommandToExecute);
 
                 Console.WriteLine("Encerrado");
-                
+
             }
             catch (TailTimeoutException ex)
             {
                 Console.WriteLine(ex.Message);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }

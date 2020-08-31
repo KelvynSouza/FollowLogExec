@@ -11,5 +11,7 @@ namespace TailLogResult.Configuration
         public int Timeout { get; set; }
         public string CommandToExecute { get; set; }
         public int FileLenght { get; set; }
+        public bool ExecuteCommand { get; set; }
+       
     }
 }
