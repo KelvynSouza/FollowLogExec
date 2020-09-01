@@ -39,8 +39,10 @@ namespace TailLogResult.Application
 
         public async Task Monitor()
         {
-            int timeout = _logStreamParameters.Timeout.Seconds;
-            var time = new TimeSpan(hours: 0, minutes: 0, seconds: timeout);
+            int timeoutHours = _logStreamParameters.Timeout.Hours;
+            int timeoutMinutes = _logStreamParameters.Timeout.Minutes;
+            int timeoutSeconds = _logStreamParameters.Timeout.Seconds;
+            var time = new TimeSpan(hours: timeoutHours, minutes: timeoutMinutes, seconds: timeoutSeconds);
             bool monitorResult = false;
 
             using (var cancellationTokenSource = new CancellationTokenSource(time))
