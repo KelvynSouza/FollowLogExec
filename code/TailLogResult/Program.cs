@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using TailLogResult.Application;
 using TailLogResult.Configuration;
 using TailLogResult.Exceptions;
@@ -10,38 +11,48 @@ namespace TailLogResult
     {
         static void Main(string[] args)
         {
+            var ts = new Stopwatch();
+            ts.Start();
             try
             {
                 Console.WriteLine("Tail Log!");
 
                 var config = ConfigurationFactory.GetParameters();
 
-                LogStream logStream = new LogStream(
-                    new LogStreamParam()
+                var logParameters = new LogStreamParam()
+                {
+                    FilePath = config.FilePath,
+                    Timeout = new Application.Timeout()
                     {
-                        FilePath = config.FilePath,
-                        Timeout = config.Timeout,
-                        ExpectedLogLine = config.ExpectedLogLine,
-                        FileLenght = config.FileLenght
-                    }
-                    );
+                        Hours = config.Timeout.Hours,
+                        Minutes = config.Timeout.Minutes,
+                        Seconds = config.Timeout.Seconds
+                    },
+                    ExpectedLogLine = config.ExpectedLogLine,
+                    FileLenght = config.FileLenght,
+                    CommandToExecute = config.CommandToExecute,
+                    ExecuteCommand = config.ExecuteCommand
+                    
+                };
+
+                LogStream logStream = new LogStream(logParameters);
 
 
-                logStream.Monitor();
+                var task = Task.Run(async () => await logStream.Monitor());
+                task.Wait();                
 
-                if (config.ExecuteCommand)
-                    CommandExecuter.Execute(config.CommandToExecute);
+                
 
-                Console.WriteLine("Encerrado");
-
-            }
-            catch (TailTimeoutException ex)
-            {
-                Console.WriteLine(ex.Message);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                ts.Stop();
+                TimeSpan time = ts.Elapsed;
+                Console.WriteLine($"Encerrado, Time Elapsed: {time.Hours}h {time.Minutes}m {time.Seconds}s");
             }
             Console.ReadLine();
         }

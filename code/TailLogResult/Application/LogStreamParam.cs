@@ -4,17 +4,21 @@ using System.Text;
 
 namespace TailLogResult.Application
 {
-    class LogStreamParam
+    public class LogStreamParam
     {
         public string FilePath { get; set; }
-        public string ExpectedLogLine { get; set; }
-        public int Timeout { get; set; }
+        public string ExpectedLogLine { get; set; }        
+        public Timeout Timeout { get; set; }
         public int FileLenght { get; set; }
         public string CommandToExecute { get; set; }
 
-        public int GetSecondsTimeout()
-        {
-            return Timeout * 60;
-        }
+        public bool ExecuteCommand { get; set; }
+
+    }
+    public class Timeout
+    {
+        public int Hours { get; set; }
+        public int Minutes { get; set; }
+        public int Seconds { get; set; }
     }
 }

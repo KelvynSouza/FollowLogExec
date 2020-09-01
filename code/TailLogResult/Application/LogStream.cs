@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using TailLogResult.Exceptions;
 
 namespace TailLogResult.Application
@@ -35,27 +36,72 @@ namespace TailLogResult.Application
             }
         }
 
+        public async Task Monitor()
+        {
+            int timeout = _logStreamParameters.Timeout.Seconds;
+            var time = new TimeSpan(hours: 0, minutes: 0, seconds: timeout);
+            bool monitorResult = false;
+
+            using (var cancellationTokenSource = new CancellationTokenSource(time))
+            {
+                monitorResult = await MonitorLoop(cancellationTokenSource.Token);
+            }
+
+            if (_logStreamParameters.ExecuteCommand && monitorResult)
+                CommandExecuter.Execute(_logStreamParameters.CommandToExecute);
+
+        }
+
+        private Task<bool> MonitorLoop(CancellationToken cancellationToken)
+        {
+            return Task.Run(new Func<bool>(() =>
+            {
+                try
+                {
+                    while (true)
+                    {
+                        if (cancellationToken.IsCancellationRequested)
+                            throw new TailTimeoutException();
+
+                        if (ValidateExpectedLine(TailLogLine()))
+                            return true;
+
+                        Thread.Sleep(50);
+                    }
+                    
+                }
+                catch (TailTimeoutException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+                return false;
+            }));
+
+        }
+
         private bool ValidateExpectedLine(string line)
         {
             return line.Contains(_logStreamParameters.ExpectedLogLine);
         }
 
-        public void Monitor()
-        {
+        #region Old Monitor
+        //public void Monitor()
+        //{
 
-            double timer = 0;
-            int timeout = _logStreamParameters.GetSecondsTimeout();
-            while (timer < timeout)
-            {
-                if (ValidateExpectedLine(TailLogLine())) break;
+        //    double timer = 0;
+        //    int timeout = _logStreamParameters.GetSecondsTimeout();
+        //    while (timer < timeout)
+        //    {
+        //        if (ValidateExpectedLine(TailLogLine())) break;
 
-                Thread.Sleep(100);
-                timer = timer + 0.1;
-            }
-
-            if (timer >= timeout) throw new TailTimeoutException();
+        //        Thread.Sleep(100);
+        //        timer = timer + 0.1;
+        //    }
 
 
-        }
+        //    if (timer >= timeout) throw new TailTimeoutException();
+
+        //}
+        #endregion
     }
 }
