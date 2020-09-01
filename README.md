@@ -20,8 +20,13 @@ Estrutura da configuração do Aplicativo.
     }
 
 **FilePath**->Caminho do Log
+
 **ExpectedLogLine** ->Linha esperada de encontrar no log 
+
 **Timeout**->Tempo que o aplicativo vai ficar monitorando o log
+
 **FileLenght**->Tamanho do fim ao começo que app vai ler o log. Por exemplo, ele sempre lerá a ultima linha do log se assim configurado.
+
 **ExecuteCommand**->indica se apos encontrar a linha do log, executa o comando ou não.
+
 **CommandToExecute**->Comando a ser executado após encontrar a linha
