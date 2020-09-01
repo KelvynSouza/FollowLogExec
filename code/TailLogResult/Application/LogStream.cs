@@ -30,8 +30,8 @@ namespace TailLogResult.Application
                 // or string s = Encoding.UTF8.GetString(bytes);
 
                 // and output to console
-                //Console.Clear();
-                //Console.WriteLine(s);
+                Console.Clear();
+                Console.WriteLine(s);
 
                 return s;
             }
