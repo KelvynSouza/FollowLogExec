@@ -29,7 +29,7 @@ namespace TailLogResult
                         Seconds = config.Timeout.Seconds
                     },
                     ExpectedLogLine = config.ExpectedLogLine,
-                    FileLenght = config.FileLenght,
+                    LineLenght = config.LineLenght,
                     CommandToExecute = config.CommandToExecute,
                     ExecuteCommand = config.ExecuteCommand
                     

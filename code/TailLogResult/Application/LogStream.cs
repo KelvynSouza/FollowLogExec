@@ -21,16 +21,17 @@ namespace TailLogResult.Application
             using (FileStream fs = File.Open(_logStreamParameters.FilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 // Seek 1024 bytes from the end of the file
-                fs.Seek(Math.Max(-_logStreamParameters.FileLenght, -fs.Length), SeekOrigin.End);
+                fs.Seek(Math.Max(-_logStreamParameters.LineLenght, -fs.Length), SeekOrigin.End);
                 // read 1024 bytes
-                byte[] bytes = new byte[_logStreamParameters.FileLenght];
-                fs.Read(bytes, 0, _logStreamParameters.FileLenght);
+                byte[] bytes = new byte[_logStreamParameters.LineLenght];
+                fs.Read(bytes, 0, _logStreamParameters.LineLenght);
                 // Convert bytes to string
                 string s = Encoding.Default.GetString(bytes).TrimEnd('\0');
                 // or string s = Encoding.UTF8.GetString(bytes);
+
                 // and output to console
-                Console.Clear();
-                Console.WriteLine(s);
+                //Console.Clear();
+                //Console.WriteLine(s);
 
                 return s;
             }

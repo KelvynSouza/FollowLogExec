@@ -10,7 +10,7 @@ namespace TailLogResult.Configuration
         public string ExpectedLogLine { get; set; }
         public Timeout Timeout { get; set; }
         public string CommandToExecute { get; set; }
-        public int FileLenght { get; set; }
+        public int LineLenght { get; set; }
         public bool ExecuteCommand { get; set; }
        
 
