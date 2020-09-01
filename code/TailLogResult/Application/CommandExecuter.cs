@@ -15,8 +15,7 @@ namespace TailLogResult.Application
             startInfo.Arguments = $"/C {command}";
             process.StartInfo = startInfo;
             process.Start();
-            process.WaitForExit();
-          
+            //process.WaitForExit();          
         }
     }
 }
