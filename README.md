@@ -1,4 +1,4 @@
-# TailLogResult
+# FollowLogExec
 Projeto para rastrear log e executar um comando quando linha esperada for encontrada.
 
 O sistema tem como objetivo fazer a leitura constante de um log, por um tempo definido na configuração. 
